@@ -74,7 +74,7 @@ async function main() {
                         console.log('Invalid day')
                         break
                 }
-                let date = rl.question('Current Date: ')
+                let date = rl.question('Current Date: (YYYY-MM-DD) ')
                 let book_isbn = Number(rl.question('Book ISBN: '))
                 await book.borrow_book(name, id, phone, book_isbn, day, date)
                 break

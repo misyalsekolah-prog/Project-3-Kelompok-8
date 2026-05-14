@@ -2,10 +2,10 @@ class BookModel {
 
     constructor() {
 
-        this.books_collection = global.db.collection('books')
+        this.books_collection = global.db.collection('book')
         this.borrower_collection = global.db.collection('borrower')
         this.borrowing_collection = global.db.collection('borrowing')
-        this.officers_collection = global.db.collection('officers')
+        this.officers_collection = global.db.collection('officer')
         this.return_collection = global.db.collection('return')
     }
 
@@ -28,6 +28,7 @@ class BookModel {
             console.log(`Author: ${b.penulis.join(', ')}`)
             console.log(`Category: ${b.kategori}`)
             console.log(`Year: ${b.tahun}`)
+            console.log(`Page: ${b.halaman}`)
             console.log(`Rating: ${b.rating}`)
             console.log(`Stock: ${b.stock}\n`)
         })
@@ -55,7 +56,10 @@ class BookModel {
             console.log(`${i + 1}. ${b.judul}`)
             console.log(`ISBN: ${b.isbn}`)
             console.log(`Penulis: ${b.penulis.join(', ')}`)
+            console.log(`Page: ${b.halaman}`)
             console.log(`Rating: ${b.rating}`)
+            console.log(`Synopsis: ${b.sinopsis}`)
+            console.log(`Cover: ${b.cover}`)
             console.log(`Stock: ${b.stock}\n`)
         })
     }
@@ -70,6 +74,8 @@ class BookModel {
             return
         }
 
+        if (book)
+
         const officer = await this.officers_collection.findOne({work_time: day})
 
         if (book.stock <= 0) {
@@ -77,13 +83,23 @@ class BookModel {
             return
         }
 
+        const borrowing_exist = await this.borrowing_collection.findOne(
+            borrower_id: id,
+            book_isbn: book_isbn
+        )
+
+        const borrow_date = new Date(date)
+        const due_date = new Date(borrow_date)
+
+        due_date.setDate(due_date.getDate() + 14)
+
         await this.borrowing_collection.insertOne({
             borrower_id : id,
             book_isbn,
             day,
-            date,
+            borrow_date,
+            due_date,
             officer_id: officer.officer_id,
-            status: 'Borrowed'
         })
 
         const borrower = await this.borrower_collection.findOne({
@@ -105,6 +121,7 @@ class BookModel {
 
         console.log('Book borrowed successfully')
         console.log(`Remaining stock: ${book.stock - 1}`)
+        console.log(`Due Date: ${due_date.toDateString()}`)
     }
 
     async return_book(borrower_id, book_isbn, day, date) {
@@ -113,7 +130,6 @@ class BookModel {
             await this.borrowing_collection.findOne({
                 borrower_id,
                 book_isbn,
-                status: 'Borrowed'
             })
 
         if (!borrow_r) {
@@ -125,13 +141,25 @@ class BookModel {
             work_time: day
         })
 
+        const return_date = new Date(date)
+
+        let fine = 0
+        let late_days = 0
+
+        if (return_date > borrow_r.due_date){
+            const late_time = return_date - borrow_r.due_date
+            late_days = Math.ceil(late_time / (1000 * 60 * 60 * 24))
+            fine = late_days * 5000
+        }
+
         await this.return_collection.insertOne({
             borrower_id,
             book_isbn,
             day,
-            date,
+            return_date,
+            due_date: borrow_r.due_date,
+            fine,
             officer_id: officer.officer_id,
-            status: 'Returned'
         })
 
         await this.borrowing_collection.deleteOne({
@@ -145,6 +173,9 @@ class BookModel {
         )
 
         console.log('Book returned successfully')
+        if(fine > 0){
+            console.log(`Your fine during ${late_days} day: ${fine}`)
+        }
     }
 
     async book_category_statistics() {
@@ -176,7 +207,7 @@ class BookModel {
                 $limit: 20
         }]).toArray()
 
-        console.log('=== 20 Book Based on High Rate ===\n')
+        console.log('=== 20 Book Based on Highest Rate ===\n')
 
         rate_high.forEach((r, i) =>{
             console.log(`${i + 1}. ${r.judul}`)
