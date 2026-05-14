@@ -83,10 +83,15 @@ class BookModel {
             return
         }
 
-        const borrowing_exist = await this.borrowing_collection.findOne(
+        const borrowing_exist = await this.borrowing_collection.findOne({
             borrower_id: id,
             book_isbn: book_isbn
-        )
+        })
+
+        if (borrowing_exist){
+            console.log('You are still borrowing this book')
+        }
+        return
 
         const borrow_date = new Date(date)
         const due_date = new Date(borrow_date)
