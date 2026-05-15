@@ -14,12 +14,7 @@ class BookModel {
         const books =
             await this.books_collection.find().toArray()
 
-        console.log('\n===BOOK LIST===')
-
-        if (books.length == 0) {
-            console.log('No books found')
-            return
-        }
+        console.log('\n===BOOK LIST===\n')
 
         books.forEach((b, i) => {
 
@@ -74,8 +69,6 @@ class BookModel {
             return
         }
 
-        if (book)
-
         const officer = await this.officers_collection.findOne({work_time: day})
 
         if (book.stock <= 0) {
@@ -89,9 +82,8 @@ class BookModel {
         })
 
         if (borrowing_exist){
-            console.log('You are still borrowing this book')
+            console.log('You are still borrowing')
         }
-        return
 
         const borrow_date = new Date(date)
         const due_date = new Date(borrow_date)
