@@ -14,7 +14,7 @@ class BookModel {
         const books =
             await this.books_collection.find().toArray()
 
-        console.log('\n===BOOK LIST===\n')
+        console.log('\n=== BOOK LIST ===\n')
 
         books.forEach((b, i) => {
 
