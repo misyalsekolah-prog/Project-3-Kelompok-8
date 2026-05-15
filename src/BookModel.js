@@ -18,13 +18,13 @@ class BookModel {
         while(true) {
             console.clear()
             const books =
-            await this.books_collection.find().skip(page * 10).limit(10).toArray()
+            await this.books_collection.find().skip(page * 30).limit(30).toArray()
 
             console.log('\n=== BOOK LIST ===\n')
 
             books.forEach((b, i) => {
 
-            console.log(`${page * 10 + i + 1}. ${b.judul}`)
+            console.log(`${page * 30 + i + 1}. ${b.judul}`)
             console.log(`ISBN: ${b.isbn}`)
             console.log(`Author: ${b.penulis.join(', ')}`)
             console.log(`Category: ${b.kategori}`)
@@ -34,10 +34,10 @@ class BookModel {
             console.log(`Stock: ${b.stock}\n`)
         })
 
-        let choose_page = rl.question('<< Next >> <<Previous>> <<Quit>>: ')
+        let pilihan = rl.question('1. Next >>\n 2. <<Previous\n 3. Quit: ')
 
-        if(choose_page == 'n') page ++
-        else if (choose_page == 'p' && page > 0) page --
+        if(pilihan == 1) page ++
+        else if (pilihan == 2 && page > 0) page --
         else break
     }}
 
