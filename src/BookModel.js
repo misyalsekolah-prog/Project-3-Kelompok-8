@@ -1,3 +1,5 @@
+const rl = require('readline-sync')
+
 class BookModel {
 
     constructor() {
@@ -11,14 +13,18 @@ class BookModel {
 
     async show_books() {
 
-        const books =
-            await this.books_collection.find().toArray()
+        let page = 0
 
-        console.log('\n=== BOOK LIST ===\n')
+        while(true) {
+            console.clear()
+            const books =
+            await this.books_collection.find().skip(page * 10).limit(10).toArray()
 
-        books.forEach((b, i) => {
+            console.log('\n=== BOOK LIST ===\n')
 
-            console.log(`${i + 1}. ${b.judul}`)
+            books.forEach((b, i) => {
+
+            console.log(`${page * 10 + i + 1}. ${b.judul}`)
             console.log(`ISBN: ${b.isbn}`)
             console.log(`Author: ${b.penulis.join(', ')}`)
             console.log(`Category: ${b.kategori}`)
@@ -27,7 +33,13 @@ class BookModel {
             console.log(`Rating: ${b.rating}`)
             console.log(`Stock: ${b.stock}\n`)
         })
-    }
+
+        let choose_page = rl.question('<< Next >> <<Previous>> <<Quit>>: ')
+
+        if(choose_page == 'n') page ++
+        else if (choose_page == 'p' && page > 0) page --
+        else break
+    }}
 
     async search_book(judul) {
 
