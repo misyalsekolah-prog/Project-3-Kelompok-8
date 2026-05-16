@@ -24,7 +24,7 @@ async function main() {
         console.log('6. 20 Book Based on High Rate')
         console.log('7. Exit')
 
-        let pilih = rl.question('Choose The Menu: ')
+        let pilih = rl.question('Choose the menu by click the number: ')
 
         switch (pilih) {
 
@@ -47,7 +47,7 @@ async function main() {
                 console.log('3. Wednesday')
                 console.log('4. Thursday')
                 console.log('5. Friday')
-                let day_choice = rl.question('Today: ')
+                let day_choice = rl.question('Today (Clik the number): ')
                 let day
                 switch(day_choice){
                     case '1':
@@ -88,7 +88,7 @@ async function main() {
                 console.log('3. Wednesday')
                 console.log('4. Thursday')
                 console.log('5. Friday')
-                let r_day_choice = rl.question('Today: ')
+                let r_day_choice = rl.question('Today (Clik the number): ')
                 let r_day
                 switch(r_day_choice){
                     case '1':

@@ -18,7 +18,7 @@ class BookModel {
         while(true) {
             console.clear()
             const books =
-            await this.books_collection.find().skip(page * 30).limit(30).toArray()
+            await this.books_collection.find().sort({judul: 1}).skip(page * 30).limit(30).toArray()
 
             console.log('\n=== BOOK LIST ===\n')
 
@@ -34,7 +34,7 @@ class BookModel {
             console.log(`Stock: ${b.stock}\n`)
         })
 
-        let pilihan = rl.question('1. Next >>\n 2. <<Previous\n 3. Quit: ')
+        let pilihan = rl.question('1. Next >>\n2. <<Previous\n3. Quit\nChoose the number: ')
 
         if(pilihan == 1) page ++
         else if (pilihan == 2 && page > 0) page --
