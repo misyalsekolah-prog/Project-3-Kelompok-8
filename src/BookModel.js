@@ -18,18 +18,18 @@ class BookModel {
         while(true) {
             console.clear()
             const books =
-            await this.books_collection.find().sort({judul: 1}).skip(page * 30).limit(30).toArray()
+            await this.books_collection.find().sort({title: 1}).skip(page * 30).limit(30).toArray()
 
             console.log('\n=== BOOK LIST ===\n')
 
             books.forEach((b, i) => {
 
-            console.log(`${page * 30 + i + 1}. ${b.judul}`)
+            console.log(`${page * 30 + i + 1}. ${b.title}`)
             console.log(`ISBN: ${b.isbn}`)
-            console.log(`Author: ${b.penulis.join(', ')}`)
-            console.log(`Category: ${b.kategori}`)
-            console.log(`Year: ${b.tahun}`)
-            console.log(`Page: ${b.halaman}`)
+            console.log(`Author: ${b.author.join(', ')}`)
+            console.log(`Category: ${b.category}`)
+            console.log(`Year: ${b.year}`)
+            console.log(`Page: ${b.page}`)
             console.log(`Rating: ${b.rating}`)
             console.log(`Stock: ${b.stock}\n`)
         })
@@ -41,12 +41,12 @@ class BookModel {
         else break
     }}
 
-    async search_book(judul) {
+    async search_book(title) {
 
         const books =
             await this.books_collection.find({
-                judul: {
-                    $regex: judul,
+                title: {
+                    $regex: title,
                     $options: 'i'
                 }
             }).toArray()
@@ -60,12 +60,12 @@ class BookModel {
 
         books.forEach((b, i) => {
 
-            console.log(`${i + 1}. ${b.judul}`)
+            console.log(`${i + 1}. ${b.title}`)
             console.log(`ISBN: ${b.isbn}`)
-            console.log(`Penulis: ${b.penulis.join(', ')}`)
-            console.log(`Page: ${b.halaman}`)
+            console.log(`Penulis: ${b.author.join(', ')}`)
+            console.log(`Page: ${b.page}`)
             console.log(`Rating: ${b.rating}`)
-            console.log(`Synopsis: ${b.sinopsis}`)
+            console.log(`Synopsis: ${b.synopsis}`)
             console.log(`Cover: ${b.cover}`)
             console.log(`Stock: ${b.stock}\n`)
         })
@@ -95,6 +95,7 @@ class BookModel {
 
         if (borrowing_exist){
             console.log('You are still borrowing')
+            return
         }
 
         const borrow_date = new Date(date)
@@ -194,7 +195,7 @@ class BookModel {
 
                 {
                     $group: {
-                        _id: '$kategori',
+                        _id: '$category',
                         total: { $sum: 1 }
                     }
                 }
@@ -219,7 +220,7 @@ class BookModel {
         console.log('=== 20 Book Based on Highest Rate ===\n')
 
         rate_high.forEach((r, i) =>{
-            console.log(`${i + 1}. ${r.judul}`)
+            console.log(`${i + 1}. ${r.title}`)
             console.log(`ISBN: ${r.isbn}`)
             console.log(`Rating: ${r.rating}\n`)
         })
