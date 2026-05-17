@@ -22,7 +22,6 @@ class Database {
 
         global.db =
             this.client.db(this.dbName)
-    }
-}
+    }}
 
 module.exports = Database

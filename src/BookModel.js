@@ -17,7 +17,7 @@ class BookModel {
 
         while(true) {
             console.clear()
-            const books =
+            const books = 
             await this.books_collection.find().sort({title: 1}).skip(page * 30).limit(30).toArray()
 
             console.log('\n=== BOOK LIST ===\n')
@@ -94,7 +94,7 @@ class BookModel {
         })
 
         if (borrowing_exist){
-            console.log('You are still borrowing')
+            console.log('You are still borrowing the same book')
             return
         }
 

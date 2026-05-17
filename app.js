@@ -28,14 +28,12 @@ async function main() {
 
         switch (pilih) {
 
-            case '1':
-                await book.show_books()
+            case '1': await book.show_books()
                 break
 
-            case '2':
-                let search = rl.question('Search the title: ')
-                await book.search_book(search)
-                break
+            case '2':let search = rl.question('Search the title: ')
+                    await book.search_book(search)
+                    break
 
             case '3':
                 let name = rl.question('Your Name: ')
